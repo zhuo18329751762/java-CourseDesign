@@ -79,7 +79,17 @@
                             <td th:text="${book.bookSum}"></td>
                             <td th:text="${book.bookLend}"></td>
                             <td th:text="${book.bookSum-book.bookLend}"></td>
-                            <td th:text="${book.tag}"></td>
+                            <td th:switch="${book.categoryID}">
+                                <span th:case="001">小说</span>
+                                <span th:case="002">历史</span>
+                                <span th:case="003">生物</span>
+                                <span th:case="004">计算机</span>
+                                <span th:case="005">情感</span>
+                                <span th:case="006">文学</span>
+                                <span th:case="007">地理</span>
+                                <span th:case="008">军事</span>
+                            </td>
+
                             <td th:text="${book.isbn}"></td>
                             <td class="td-manage" style="text-align: center">
                                 <a title="编辑"

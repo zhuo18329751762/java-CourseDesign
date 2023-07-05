@@ -66,8 +66,8 @@ public class ReaderController {
 
     @RequestMapping("/UpdateReader")
     @ResponseBody
-    public String updateReader(String id, String name, String password, String oldPassword, String gender, String telephone, String email) {
-        Reader reader = new Reader(id, name, password == "" ? oldPassword : password, gender, telephone, email);
+    public String updateReader(String id, String identityId,String residue,String name, String password, String oldPassword, String gender, String telephone, String email,String account) {
+        Reader reader = new Reader(id,identityId,residue, name, password == "" ? oldPassword : password, gender, telephone, email,account);
         int state = readerServiceImpl.updateReader(reader);
         String msg = "请重试";
         if (state == 1) {

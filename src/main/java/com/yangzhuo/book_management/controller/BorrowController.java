@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 @Controller
@@ -55,6 +56,20 @@ public class BorrowController {
     @ResponseBody
     public String toReturnBook(String bookID,String borrowTime,HttpServletRequest request) {
         HttpSession session = request.getSession();
+        //获取要还书的角色
+        String role = (String) session.getAttribute("role");
+        if("admin".equals(role)){
+            //如果是管理员直接放行
+            borrowTime = borrowTime.toString().replace("T", " ").replace(".000+08:00", "");
+            Borrow borrow = new Borrow("r110", bookID, borrowTime, new Date());
+            int state = bookService.returnBook(bookID);
+            String msg = "归还失败，请重试！";
+            if (state == 1) {
+                state = borrowServiceImpl.updateBorrow(borrow);
+                msg = "归还成功！";
+            }
+            return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
+        }
         //强制类型转换
         Reader user = (Reader) session.getAttribute("user");
         String readerID=user.getId();
@@ -69,7 +84,10 @@ public class BorrowController {
         if(intervalTime>90*24*60*60*1000){
             //用户还书时间已经超过三个月
             state=0;
-            msg="归还失败，借书已超过三个月，需前往图书馆补交罚款";
+            System.out.println(intervalTime);
+            double days=intervalTime/24/60/60/1000;
+            int money= (int) (days*0.1);
+            msg="归还失败，借书已超过三个月，需前往图书馆补交罚款"+money+"元(标准为每逾期一天，增加罚款0.1)";
             return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
         }
         //归还本书

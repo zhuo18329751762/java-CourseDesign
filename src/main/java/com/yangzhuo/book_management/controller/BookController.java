@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -32,8 +33,8 @@ public class BookController {
 
     @RequestMapping("/admin/UpdateBook")
     @ResponseBody
-    public String updateBook(String bookID, String bookName, String bookAuthor, String bookPublisher, String publishTime, String bookPrice, String bookSum, String bookLend, String tag, String isbn) {
-        Book book = new Book(bookID, bookName, bookAuthor, bookPublisher, publishTime, bookPrice, bookSum, bookLend, tag, isbn);
+    public String updateBook(String bookID, String categoryID,String bookName, String bookAuthor, String bookPublisher, String publishTime, String bookPrice, String bookSum, String bookLend,  String isbn) {
+        Book book = new Book(bookID,categoryID, bookName, bookAuthor, bookPublisher,  publishTime, bookPrice, bookSum, bookLend, isbn);
         int state = bookServiceImpl.updateBook(book);
         String msg = "更新失败，请重试";
         if (state == 1) {

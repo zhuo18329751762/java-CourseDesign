@@ -45,7 +45,8 @@
                         <tr>
                             <th>序号</th>
                             <th style="text-align: center">选择</th>
-                            <th>用户ID</th>
+                            <th>用户ID4</th>
+                            <th>用户身份</th>
                             <th>用户名</th>
                             <th>密码</th>
                             <th>性别</th>
@@ -62,6 +63,13 @@
                                 <input type="checkbox" name="id" th:value="${user.id}" lay-skin="primary">
                             </td>
                             <td th:text="${user.id}"></td>
+                            <td th:switch="${user.identityId}">
+                                <span th:case="1">学生</span>
+                                <span th:case="2">副教授</span>
+                                <span th:case="3">讲师</span>
+                                <span th:case="4">助教</span>
+                                <span th:case="*">未知</span>
+                            </td>
                             <td th:text="${user.name}"></td>
                             <td th:text="${user.password}"></td>
                             <td th:text="${user.gender}"></td>
