@@ -3,16 +3,24 @@ package com.yangzhuo.book_management.controller;
 import com.yangzhuo.book_management.entity.Book;
 import com.yangzhuo.book_management.entity.Borrow;
 import com.yangzhuo.book_management.entity.Reader;
+import com.yangzhuo.book_management.mapper.BorrowMapper;
 import com.yangzhuo.book_management.service.BookService;
 import com.yangzhuo.book_management.service.BorrowService;
 import com.yangzhuo.book_management.service.ReaderService;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.unit.DataUnit;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +32,8 @@ public class BorrowController {
     BookService bookService;
     @Resource
     ReaderService readerServiceImpl;
+    @Resource
+    BorrowMapper borrowMapper;
 
     @RequestMapping("/admin/toBorrowList")
     public String toBorrowList(String bookID, String readerID, String isNull, Model model) {
@@ -43,14 +53,33 @@ public class BorrowController {
 
     @RequestMapping("/admin/toReturnBook")
     @ResponseBody
-    public String toReturnBook(String readerID, String bookID, String borrowTime) {
-        borrowTime = borrowTime.toString().replace("T", " ").replace(".000+08:00", "");
-        Borrow borrow = new Borrow(readerID, bookID, borrowTime, new Date());
-        int state = bookService.returnBook(bookID);
-        String msg = "归还失败，请重试！";
-        if (state == 1) {
+    public String toReturnBook(String bookID,String borrowTime,HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        //强制类型转换
+        Reader user = (Reader) session.getAttribute("user");
+        String readerID=user.getId();
+        Borrow borrow = borrowServiceImpl.getBorrow(readerID,bookID,borrowTime);
+        //判断是否逾期，逾期要交罚款
+        Date returnTime=new Date();
+        long intervalTime=returnTime.getTime()-borrow.getBorrowTime().getTime();
+
+        int state;
+        String msg;
+        //判断这个时间差是比3个月大还是比三个月小
+        if(intervalTime>90*24*60*60*1000){
+            //用户还书时间已经超过三个月
+            state=0;
+            msg="归还失败，借书已超过三个月，需前往图书馆补交罚款";
+            return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
+        }
+        //归还本书
+        if(borrow!=null){
+            borrow.setReturnTime(returnTime);
             state = borrowServiceImpl.updateBorrow(borrow);
             msg = "归还成功！";
+        }else{
+            state=0;
+            msg="归还失败，请重试！";
         }
         return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
     }
@@ -64,9 +93,27 @@ public class BorrowController {
         return "admin/addBorrow";
     }
 
+    /**
+     * 读者借阅书籍
+     * @return
+     */
     @RequestMapping("/admin/AddBorrow")
     @ResponseBody
-    public String addBorrow(String readerID, String bookID, String borrowTime) {
+    public String addBorrow(String bookID,HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        //强制类型转换
+        Reader user = (Reader) session.getAttribute("user");
+        String readerID=user.getId();
+        //获取当前时间
+        // 创建一个SimpleDateFormat对象，指定日期和时间的模式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // 获取当前时间的Date对象
+        Date now = new Date();
+        // 使用format方法将Date对象转换为字符串
+        String borrowTime = sdf.format(now);
+        System.out.println("readerID="+readerID);
+        System.out.println("bookID="+bookID);
+        System.out.println("borrowTime="+borrowTime);
         int state = 0;
         String msg = "馆内暂时无货,请等待。";
         //判断借出数是否小于书本总数

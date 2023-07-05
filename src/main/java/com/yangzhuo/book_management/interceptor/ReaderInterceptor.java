@@ -27,6 +27,9 @@ public class ReaderInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object user = session.getAttribute("user");
         String role = (String) session.getAttribute("role");
+        if(role.equals("reader")){
+            return true;
+        }
         if (user != null && role != null && role.equals("admin")) {
             //放行
             return true;

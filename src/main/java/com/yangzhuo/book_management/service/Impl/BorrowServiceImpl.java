@@ -46,6 +46,11 @@ public class BorrowServiceImpl implements BorrowService {
         return borrowList;
     }
 
+    /**
+     * 更新
+     * @param borrow
+     * @return
+     */
     @Override
     public int updateBorrow(Borrow borrow) {
         QueryWrapper<Borrow> wrapper = new QueryWrapper();
@@ -76,5 +81,18 @@ public class BorrowServiceImpl implements BorrowService {
     public int addBorrow(String readerID, String bookID, String borrowTime) {
         Borrow borrow = new Borrow(readerID, bookID, borrowTime);
         return borrowMapper.insert(borrow);
+    }
+
+    /**
+     * 根据用户id，书本id，还有借阅时间来查询对应的借阅记录
+     * @return
+     */
+    @Override
+    public Borrow getBorrow(String readerID,String bookID,String borrowTime) {
+        QueryWrapper<Borrow> wrapper=new QueryWrapper<>();
+        wrapper.eq("readerID", readerID)
+                .eq("bookID", bookID)
+                .eq("borrowTime", borrowTime);
+        return borrowMapper.selectOne(wrapper);
     }
 }

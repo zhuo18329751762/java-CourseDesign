@@ -13,4 +13,6 @@ public interface BorrowService {
     int check(String readerID);
 
     int addBorrow(String readerID, String bookID, String borrowTime);
+
+    Borrow getBorrow(String readerID,String bookID,String borrowTime);
 }

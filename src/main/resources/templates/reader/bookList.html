@@ -67,7 +67,7 @@
                             <td class="td-manage" style="text-align: center">
                                 <a title="借阅" th:if="${(book.bookSum-book.bookLend)} gt 0 and ${allow} eq true"
                                    class="layui-btn"
-                                   onclick="allow(this)"
+                                   th:onclick="allow(this,[[${book.bookID}]])"
                                    href="javascript:;">
                                     <i class="layui-icon"></i>去借阅
                                 </a>
@@ -129,11 +129,28 @@
     });
 
     /*用户-借书*/
-    function allow(obj) {
-        layer.confirm("图书馆开放时间为:<center style='color: red;font-size: 18px'>周一至周日 8:00 - 22:00</center>请前往图书馆借阅！", {
-            title: '通知',
-            btn: ['知道了']
-        })
+    function allow(obj, bookID) {
+        $.ajax({
+            url: "/admin/AddBorrow",
+            type: "POST",
+            data: {
+
+                "bookID": bookID,
+
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.state == 1) {
+                    layer.msg('已借阅!', {icon: 1, time: 1000}, function () {
+                        window.location.reload();
+                    });
+                    return false;
+                } else {
+                    layer.msg(res.msg);
+                    return false;
+                }
+            },
+        });
     }
 
     /*用户-不准借书*/

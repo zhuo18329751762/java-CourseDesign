@@ -57,7 +57,7 @@
                             <td th:text="${borrow.bookID}"></td>
                             <td>
                                 <a title="书籍详情"
-                                   th:onclick="xadmin.open('书籍详情',[['/reader/toBookshelf?bookID='+${borrow.bookID}]])"
+                                   th:onclick="xadmin.on('书籍详情',[['/reader/toBookshelf?bookID='+${borrow.bookID}]])"
                                    href="javascript:; " class="layui-btn layui-btn-xs layui-btn-normal">
                                     <i class="layui-icon">&#xe60b;</i>书籍详情
                                 </a>
@@ -66,13 +66,13 @@
                             <td th:text="${#dates.format(borrow.returnTime,'yyyy年MM月dd日 HH时mm分ss秒')}"></td>
                             <td class="td-manage" style="text-align: center">
                                 <a title="归还" th:if="${borrow.returnTime} eq null"
-                                   onclick="member_del(this)"
+                                   th:onclick="member_del(this,[[${borrow.bookID}]],[[${borrow.borrowTime}]])"
                                    class="layui-btn layui-btn-xs layui-btn-danger"
                                    href="javascript:;"><i class="layui-icon"></i>归还书籍
                                 </a>
                                 <a title="归还" th:if="${borrow.returnTime} ne null"
                                    class="layui-btn layui-btn-xs layui-btn-danger layui-btn-disabled"
-                                   href="javascript:;"><i class="layui-icon"></i>已归还
+                                   href="javascript:;"><i peclass="layui-icon"></i>已归还
                                 </a>
                             </td>
                         </tr>
@@ -113,11 +113,36 @@
     });
 
     /*用户-归还*/
-    function member_del(obj) {
-        layer.confirm("图书馆开放时间为:<center style='color: red;font-size: 18px'>周一至周日 8:00 - 22:00</center>请尽快前往图书馆归还！", {
-            title: '通知',
-            btn: ['知道了']
-        })
+    /**
+     * 待开发
+     * @param obj
+     */
+    function member_del(obj,bookID,borrowTime) {
+        $.ajax({
+            url: "/admin/toReturnBook",
+            type: "POST",
+            data: {
+                "bookID": bookID,
+                "borrowTime": borrowTime,
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.state == 1) {
+                    layer.msg('归还成功!', {icon: 1, time: 1000}, function () {
+                        window.location.reload();
+                    });
+                    return false;
+                } else {
+                    layer.msg(res.msg);
+                    return false;
+                }
+            },
+        });
+
+        // layer.confirm("图书馆开放时间为:<center style='color: red;font-size: 18px'>周一至周日 8:00 - 22:00</center>请尽快前往图书馆归还！", {
+        //     title: '通知',
+        //     btn: ['知道了']
+        // })
     }
 
 </script>
