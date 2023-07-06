@@ -55,13 +55,6 @@
                             <td th:text="${borrow.readerID}"></td>
                             <td th:text="${user.name}"></td>
                             <td th:text="${borrow.bookID}"></td>
-                            <td>
-                                <a title="书籍详情"
-                                   th:onclick="xadmin.on('书籍详情',[['/reader/toBookshelf?bookID='+${borrow.bookID}]])"
-                                   href="javascript:; " class="layui-btn layui-btn-xs layui-btn-normal">
-                                    <i class="layui-icon">&#xe60b;</i>书籍详情
-                                </a>
-                            </td>
                             <td th:text="${#dates.format(borrow.borrowTime,'yyyy年MM月dd日 HH时mm分ss秒')}"></td>
                             <td th:text="${#dates.format(borrow.returnTime,'yyyy年MM月dd日 HH时mm分ss秒')}"></td>
                             <td class="td-manage" style="text-align: center">

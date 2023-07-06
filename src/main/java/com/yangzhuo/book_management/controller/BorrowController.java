@@ -3,9 +3,11 @@ package com.yangzhuo.book_management.controller;
 import com.yangzhuo.book_management.entity.Book;
 import com.yangzhuo.book_management.entity.Borrow;
 import com.yangzhuo.book_management.entity.Reader;
+import com.yangzhuo.book_management.mapper.BookMapper;
 import com.yangzhuo.book_management.mapper.BorrowMapper;
 import com.yangzhuo.book_management.service.BookService;
 import com.yangzhuo.book_management.service.BorrowService;
+import com.yangzhuo.book_management.service.Impl.BookServiceImpl;
 import com.yangzhuo.book_management.service.ReaderService;
 import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.springframework.stereotype.Controller;
@@ -81,10 +83,10 @@ public class BorrowController {
         int state;
         String msg;
         //判断这个时间差是比3个月大还是比三个月小
-        if(intervalTime>90*24*60*60*1000){
+        long  time=90*24*60*60*1000L;
+        if(intervalTime>time){
             //用户还书时间已经超过三个月
             state=0;
-            System.out.println(intervalTime);
             double days=intervalTime/24/60/60/1000;
             int money= (int) (days*0.1);
             msg="归还失败，借书已超过三个月，需前往图书馆补交罚款"+money+"元(标准为每逾期一天，增加罚款0.1)";
@@ -92,6 +94,16 @@ public class BorrowController {
         }
         //归还本书
         if(borrow!=null){
+            //将用户可借阅书籍数量+1
+            Reader reader = readerServiceImpl.findReader(readerID);
+            reader.setResidue(reader.getResidue()+1);
+            //更新用户信息
+            readerServiceImpl.updateReader(reader);
+            //将书籍借出数量bookLend-1
+            Book byId = bookService.findById(bookID);
+            byId.setBookLend(byId.getBookLend()-1);
+            //更新书籍信息
+            bookService.updateBook(byId);
             borrow.setReturnTime(returnTime);
             state = borrowServiceImpl.updateBorrow(borrow);
             msg = "归还成功！";
@@ -121,6 +133,15 @@ public class BorrowController {
         HttpSession session = request.getSession();
         //强制类型转换
         Reader user = (Reader) session.getAttribute("user");
+        int state = 0;
+        String msg = "馆内暂时无货,请等待。";
+        //先判断该用户账户所剩借阅次数
+        Integer residue =Integer.parseInt(user.getResidue());
+        if(residue<1){
+            //不能借书
+            msg="借阅失败！您的借阅数量已达上限！";
+            return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
+        }
         String readerID=user.getId();
         //获取当前时间
         // 创建一个SimpleDateFormat对象，指定日期和时间的模式
@@ -129,11 +150,6 @@ public class BorrowController {
         Date now = new Date();
         // 使用format方法将Date对象转换为字符串
         String borrowTime = sdf.format(now);
-        System.out.println("readerID="+readerID);
-        System.out.println("bookID="+bookID);
-        System.out.println("borrowTime="+borrowTime);
-        int state = 0;
-        String msg = "馆内暂时无货,请等待。";
         //判断借出数是否小于书本总数
         if (bookService.check(bookID) == 1) {
             state = borrowServiceImpl.check(readerID);
@@ -142,12 +158,21 @@ public class BorrowController {
                 if (state == 1) {
                     state = borrowServiceImpl.addBorrow(readerID, bookID, borrowTime);
                     msg = "借阅成功！";
+                    //将这本书的剩余数量bookLend-1
+                    //获取书本信息
+                    Book byId = bookService.findById(bookID);
+                    //给借出数量+1
+                    byId.setBookLend(byId.getBookLend()+1);
+                    //更新书本
+                    bookService.updateBook(byId);
+                    //借阅成功应将用户的最大借阅次数-1
+                    residue--;
+                    //更新用户信息
+                    reader.setResidue(residue.toString());
+                    readerServiceImpl.updateReader(reader);
                 } else {
                     msg = "达到最大借书数量！请尽快归还！";
                 }
-            } else {
-                state = 0;
-                msg = "查无此用户！";
             }
         }
         //System.out.println("ReaderController -> registerReader(49): " + msg);

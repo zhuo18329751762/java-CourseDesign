@@ -28,6 +28,15 @@ public class BookServiceImpl implements BookService {
         return bookList;
     }
 
+    //根据书籍类型返回书籍集合
+    @Override
+    public List<Book> getBookListByTypeId(String categoryID) {
+        List<Book> bookList=null;
+        QueryWrapper<Book> wrapper=new QueryWrapper<>();
+        bookList= bookMapper.selectList(wrapper.eq("categoryID",categoryID));
+        return bookList;
+    }
+
     @Override
     public Book findById(String bookID) {
         return bookMapper.selectById(bookID);

@@ -54,15 +54,23 @@ public class ReaderController {
         model.addAttribute("readerList", readerList);
         return "admin/readerList";
     }
-
     @RequestMapping("/reader/toBookshelf")
-    public String toBookshelf(String bookName, String bookID, HttpSession session, Model model) {
+    public String toBookshelf(String bookName, String bookID,HttpSession session, Model model) {
         List<Book> bookList = bookService.getBookList(bookName, bookID);
         model.addAttribute("bookList", bookList);
         Boolean allow = (Boolean) session.getAttribute("allow");
         model.addAttribute("allow", allow);
         return "reader/bookList";
     }
+//    //根据书籍类型查询书籍
+//    @RequestMapping("/reader/toBooks")
+//    public String toBookshelf(String categoryID, HttpSession session, Model model) {
+//        List<Book> bookList = bookService.getBookListByTypeId(categoryID);
+//        model.addAttribute("bookList", bookList);
+//        Boolean allow = (Boolean) session.getAttribute("allow");
+//        model.addAttribute("allow", allow);
+//        return "reader/bookList";
+//    }
 
     @RequestMapping("/UpdateReader")
     @ResponseBody

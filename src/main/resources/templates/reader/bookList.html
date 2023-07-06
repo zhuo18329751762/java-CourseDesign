@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:display="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>书籍列表</title>
@@ -33,12 +33,25 @@
                         <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i>
                         </button>
                     </div>
+
+                    <div class="layui-inline layui-show-block" >
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="novel()">小说</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="history()" >历史</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="biology()">生物</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="computer()">计算机</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="emotion()">情感</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="literature()">文学</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="geography()">地理</button>
+                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="military()">军事</button>
+
+                    </div>
+
                 </form>
                 <div class="layui-card-body layui-table-body layui-table-main">
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
-                            <th>序号</th>
+                            <th>序号888</th>
                             <th>书籍ID</th>
                             <th>书名</th>
                             <th>作者</th>
@@ -111,10 +124,156 @@
 </div>
 </body>
 <script>
+
+    function novel(){
+        $.ajax({
+            url: "/reader/toBookshelf",
+            type: "POST",
+            data: {
+
+                "categoryID": '001',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function history(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '002',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function biology(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '003',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function computer(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '004',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function emotion(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '005',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function literature(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '006',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function geography(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '007',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+    function military(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+
+                "categoryID": '008',
+
+            },
+            dataType: 'json',
+            success: function (res) {
+
+                window.location.reload();
+
+
+            },
+        });
+    }
+
     layui.use([' laydate', 'form'], function () {
         var laydate = layui.laydate;
         var form = layui.form;
-        // 监听全选
+        //监听全选
         form.on('checkbox(checkall)', function (data) {
             if (data.elem.checked) {
                 $('tbody input').prop('checked', true);
@@ -123,6 +282,7 @@
             }
             form.render('checkbox');
         });
+
 
         //执行一个laydate实例
         laydate.render({
@@ -164,7 +324,7 @@
 
     /*用户-不准借书*/
     function notAllow(obj) {
-        layer.confirm("每个用户最多可借阅<span style='color: red;font-size: 18px'>8本</span>书籍<br>请尽快前往图书馆归还！", {
+        layer.confirm("您的借阅数量已达上限<span style='color: red;font-size: 18px'>请尽快前往图书馆归还！", {
             title:
                 '通知', btn: ['知道了']
         })

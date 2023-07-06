@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface BookService {
     List<Book> getBookList(String bookName, String bookID);
+    List<Book> getBookListByTypeId(String categoryID);
 
     Book findById(String bookID);
 
@@ -18,6 +19,5 @@ public interface BookService {
     int returnBook(String bookID);
 
     int check(String bookID);
-
 
 }
