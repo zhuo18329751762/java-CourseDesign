@@ -79,7 +79,6 @@ public class BorrowController {
         //判断是否逾期，逾期要交罚款
         Date returnTime=new Date();
         long intervalTime=returnTime.getTime()-borrow.getBorrowTime().getTime();
-
         int state;
         String msg;
         //判断这个时间差是比3个月大还是比三个月小
@@ -89,11 +88,42 @@ public class BorrowController {
             state=0;
             double days=intervalTime/24/60/60/1000;
             int money= (int) (days*0.1);
-            msg="归还失败，借书已超过三个月，需前往图书馆补交罚款"+money+"元(标准为每逾期一天，增加罚款0.1)";
+            //判断账户中的钱够不够
+            Integer account = Integer.parseInt(user.getAccount());
+            Integer sub=account-money;
+            if(sub<0){
+                //如果账户钱不够，则提示用户前往线下缴费
+                msg="归还成功，借书已超过三个月，已自动扣费"+money+"元，当前账户欠费"+Math.abs(sub)+"元";
+            }else{
+                //账户钱够,提示用户当前余额
+                msg="归还成功，已自动扣费"+money+"元，当前账户余额"+sub+"元";
+            }
+            //扣钱
+            if(borrow!=null){
+                //将用户可借阅书籍数量+1
+                Reader reader = readerServiceImpl.findReader(readerID);
+                reader.setResidue(reader.getResidue()+1);
+                //更改用户账户余额
+                reader.setAccount(sub.toString());
+                //更新用户信息
+                readerServiceImpl.updateReader(reader);
+                //将书籍借出数量bookLend-1
+                Book byId = bookService.findById(bookID);
+                byId.setBookLend(byId.getBookLend()-1);
+                //更新书籍信息
+                bookService.updateBook(byId);
+                borrow.setReturnTime(returnTime);
+                borrowServiceImpl.updateBorrow(borrow);
+            }else{
+                state=0;
+                msg="归还失败，请重试！";
+            }
+            System.out.println(msg);
             return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
         }
-        //归还本书
+        //没有超过三个月
         if(borrow!=null){
+            msg="归还成功!";
             //将用户可借阅书籍数量+1
             Reader reader = readerServiceImpl.findReader(readerID);
             reader.setResidue(reader.getResidue()+1);
@@ -106,11 +136,11 @@ public class BorrowController {
             bookService.updateBook(byId);
             borrow.setReturnTime(returnTime);
             state = borrowServiceImpl.updateBorrow(borrow);
-            msg = "归还成功！";
         }else{
             state=0;
             msg="归还失败，请重试！";
         }
+        System.out.println(msg);
         return "{\"state\":" + state + ",\"msg\":\"" + msg + "\"}";
     }
 

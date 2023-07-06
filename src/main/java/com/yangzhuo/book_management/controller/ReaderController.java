@@ -34,8 +34,19 @@ public class ReaderController {
     @RequestMapping("/RegisterReader")
     @ResponseBody
     public String registerReader(Reader reader) {
+        System.out.println("reader.getIdentityId()"+reader.getIdentityId());
         int state = 0;
         String msg = "用户名已存在！";
+        //设置初始可借阅书本数量
+        Integer identityId = Integer.parseInt(reader.getIdentityId());
+        //设置账户初始金额
+        switch (identityId){
+            case 1:reader.setResidue("5");
+            case 2:reader.setResidue("10");
+            case 3:reader.setResidue("8");
+            case 4:reader.setResidue("6");
+        }
+        reader.setAccount("0");
         if (!readerServiceImpl.haveReader(reader.getId())) {
             state = readerServiceImpl.addReader(reader);
             if (state == 1) {
@@ -62,15 +73,15 @@ public class ReaderController {
         model.addAttribute("allow", allow);
         return "reader/bookList";
     }
-//    //根据书籍类型查询书籍
-//    @RequestMapping("/reader/toBooks")
-//    public String toBookshelf(String categoryID, HttpSession session, Model model) {
-//        List<Book> bookList = bookService.getBookListByTypeId(categoryID);
-//        model.addAttribute("bookList", bookList);
-//        Boolean allow = (Boolean) session.getAttribute("allow");
-//        model.addAttribute("allow", allow);
-//        return "reader/bookList";
-//    }
+    //根据书籍类型查询书籍
+    @RequestMapping("/reader/toBooks")
+    public String  toBooks(String categoryID,HttpSession session, Model model) {
+        List<Book> bookList = bookService.getBookListByTypeId(categoryID);
+        model.addAttribute("bookList", bookList);
+        Boolean allow = (Boolean) session.getAttribute("allow");
+        model.addAttribute("allow", allow);
+        return "reader/bookList";
+    }
 
     @RequestMapping("/UpdateReader")
     @ResponseBody

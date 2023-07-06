@@ -42,6 +42,23 @@
             </div>
 
             <div class="layui-form-item">
+                <label for="L_bookName" class="layui-form-label">
+                    <span class="x-red">*</span>书籍类型</label>
+                <div class="layui-input-inline">
+                    <select id="categoryID" name="categoryID" class="valid">
+                        <option value="001">小说</option>
+                        <option value="002">历史</option>
+                        <option value="003">生物</option>
+                        <option value="004">计算机</option>
+                        <option value="005">情感</option>
+                        <option value="006">文学</option>
+                        <option value="007">地理</option>
+                        <option value="008">军事</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label for="L_bookAuthor" class="layui-form-label">
                     <span class="x-red">*</span>作者</label>
                 <div class="layui-input-inline">
@@ -91,15 +108,15 @@
                 <div class="layui-form-mid layui-word-aux">
                     <span class="x-red">* 库存总量不能小于0</span></div>
             </div>
-            <div class="layui-form-item">
-                <label for="L_tag" class="layui-form-label">
-                    <span class="x-red">*</span>分类</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="L_tag" name="tag" required="" lay-verify="required" autocomplete="off"
-                           class="layui-input"></div>
-                <div class="layui-form-mid layui-word-aux">
-                    <span class="x-red"></span></div>
-            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label for="L_tag" class="layui-form-label">-->
+<!--                    <span class="x-red">*</span>分类</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="text" id="L_tag" name="tag" required="" lay-verify="required" autocomplete="off"-->
+<!--                           class="layui-input"></div>-->
+<!--                <div class="layui-form-mid layui-word-aux">-->
+<!--                    <span class="x-red"></span></div>-->
+<!--            </div>-->
             <div class="layui-form-item">
                 <label for="L_isbn" class="layui-form-label">
                     <span class="x-red">*</span>ISBN号</label>

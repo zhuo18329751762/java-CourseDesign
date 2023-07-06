@@ -57,8 +57,8 @@ public class BookController {
 
     @RequestMapping("/admin/AddBook")
     @ResponseBody
-    public String addBook(String bookID, String bookName, String bookAuthor, String bookPublisher, String publishTime, String bookPrice, String bookSum, String tag, String isbn) {
-        Book book = new Book(bookID, bookName, bookAuthor, bookPublisher, publishTime, bookPrice, bookSum, "0", tag, isbn);
+    public String addBook(String bookID,String bookName,String categoryID, String bookAuthor, String bookPublisher, String publishTime, String bookPrice, String bookSum,  String isbn) {
+        Book book = new Book(bookID,categoryID, bookName, bookAuthor, bookPublisher, publishTime, bookPrice, bookSum, "0",  isbn);
         int state = bookServiceImpl.addBook(book);
         String msg = "添加失败，请重试";
         if (state == 1) {
