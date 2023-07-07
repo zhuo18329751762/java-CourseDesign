@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script
+    <style>
+        /* 设置表格的边框，字体，颜色等 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+        }
+
+        /* 设置表头的背景色，字体大小，加粗等 */
+        th {
+            text-align: left;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 设置表格单元格的内边距，边框等 */
+        td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 设置偶数行的背景色 */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* 设置鼠标悬停时的背景色 */
+        tr:hover {
+            background-color: #ddd;
+        }
+
+
+        button:active {
+            background-color: olive;
+        }
+        /* 设置按钮的样式 */
+        button {
+            background-color: aquamarine;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 10px;
+        }
+    </style>
+    <!-- 引入Vue.js库 -->
+
+</head>
+<body>
+
+<h2>书籍列表</h2>
+
+<!-- 创建一个Vue实例，绑定到id为app的元素上 -->
+<div id="app">
+    <!-- 在表格的上方，创建8个按钮 -->
+
+    <!-- 使用v-for指令，遍历books数组，生成表格行 -->
+    <table>
+        <div>
+            <button onclick="novel()">小说</button>
+            <button onclick="history()">历史</button>
+            <button onclick="biology()">生物</button>
+            <button onclick="computer()">计算机</button>
+            <button onclick="emotion()">情感</button>
+            <button onclick="literature()">文学</button>
+            <button onclick="geography()">地理</button>
+            <button onclick="military()">军事</button>
+        </div>
+        <tr>
+            <th>序号</th>
+            <th>书籍ID</th>
+            <th>书名</th>
+            <th>作者</th>
+            <th>出版社</th>
+            <th>出版日期</th>
+            <th>单价</th>
+            <th>剩余库存</th>
+            <th>分类</th>
+            <th>ISBN号</th>
+        </tr>
+        <tr v-for="(book, index) in bookList" :key="book">
+            <!-- 使用{{}}语法，插入数据 -->
+            <td>{{index + 1}}</td>
+            <td>{{book.bookID}}</td>
+            <td>{{book.bookName}}</td>
+            <td>{{book.bookAuthor}}</td>
+            <td>{{book.bookPublisher}}</td>
+            <td>{{book.publishTime}}</td>
+            <td>{{book.bookPrice}}</td>
+            <td>{{book.bookSum-book.bookLend}}</td>
+            <td switch="${book.categoryID}">
+                <span case="001">小说</span>
+                <span case="002">历史</span>
+                <span case="003">生物</span>
+                <span case="004">计算机</span>
+                <span case="005">情感</span>
+                <span case="006">文学</span>
+                <span case="007">地理</span>
+                <span case="008">军事</span>
+            </td>
+            <td>{{book.isbn}}</td>
+        </tr>
+    </table>
+
+</div>
+
+<script>
+    function novel(){
+        $.ajax({
+            url: "/reader/toBooks",
+            type: "POST",
+            data: {
+                "categoryID": '001',
+            },
+            dataType: 'json',
+            success: function (res) {
+                this.bookList=res;
+                window.location.reload();
+
+
+            },
+        });
+    }
+       function history(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '002',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function biology(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '003',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function computer(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '004',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function emotion(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '005',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function literature(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '006',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function geography(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '007',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+       function military(){
+           $.ajax({
+               url: "/reader/toBooks",
+               type: "POST",
+               data: {
+
+                   "categoryID": '008',
+
+               },
+               dataType: 'json',
+               success: function (res) {
+                   this.bookList=res;
+                   window.location.reload();
+
+
+               },
+           });
+       }
+
+    // 创建一个Vue实例
+    var app = new Vue({
+        // 绑定到id为app的元素上
+        el: '#app',
+        // 定义数据模型
+        data: {
+            // 假设这里有一个数组，存储了从后端获取的书籍数据
+            bookList: []
+        },
+    });
+</script>
+
+</body>
+</html>

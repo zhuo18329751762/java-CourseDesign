@@ -73,13 +73,15 @@ public class ReaderController {
         model.addAttribute("allow", allow);
         return "reader/bookList";
     }
-    //根据书籍类型查询书籍
+
     @RequestMapping("/reader/toBooks")
-    public String  toBooks(String categoryID,HttpSession session, Model model) {
-        List<Book> bookList = bookService.getBookListByTypeId(categoryID);
-        model.addAttribute("bookList", bookList);
-        Boolean allow = (Boolean) session.getAttribute("allow");
-        model.addAttribute("allow", allow);
+    public String toBooks(String categoryID,String bookName, String bookID,HttpSession session, Model model) {
+        System.out.println("------------------------------------");
+        System.out.println(categoryID);
+            List<Book> bookList = bookService.getBookListByTypeId(categoryID);
+            model.addAttribute("bookList", bookList);
+            Boolean allow = (Boolean) session.getAttribute("allow");
+            model.addAttribute("allow", allow);
         return "reader/bookList";
     }
 

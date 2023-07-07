@@ -34,16 +34,8 @@
                         </button>
                     </div>
 
-                    <div class="layui-inline layui-show-block" >
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="novel()">小说</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="history()" >历史</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="biology()">生物</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="computer()">计算机</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="emotion()">情感</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="literature()">文学</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="geography()">地理</button>
-                        <button style="background-color: aquamarine; border-radius: 5px;padding:0 5px;width:100px" th:onclick="military()">军事</button>
-
+                    <div class="layui-inline layui-show-block">
+                        <button class="layui-btn" onclick="category(event)">分类查询</button>
                     </div>
 
                 </form>
@@ -51,7 +43,7 @@
                     <table class="layui-table layui-form">
                         <thead>
                         <tr>
-                            <th>序号888</th>
+                            <th>序号</th>
                             <th>书籍ID</th>
                             <th>书名</th>
                             <th>作者</th>
@@ -124,179 +116,6 @@
 </div>
 </body>
 <script>
-
-    function novel(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '001',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function history(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '002',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function biology(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '003',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function computer(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '004',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function emotion(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '005',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function literature(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '006',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function geography(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '007',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-    function military(){
-        $.ajax({
-            url: "/reader/toBooks",
-            type: "POST",
-            data: {
-
-                "categoryID": '008',
-
-            },
-            dataType: 'json',
-            success: function (res) {
-
-                window.location.reload();
-
-
-            },
-        });
-    }
-
-    layui.use([' laydate', 'form'], function () {
-        var laydate = layui.laydate;
-        var form = layui.form;
-        //监听全选
-        form.on('checkbox(checkall)', function (data) {
-            if (data.elem.checked) {
-                $('tbody input').prop('checked', true);
-            } else {
-                $('tbody input').prop('checked', false);
-            }
-            form.render('checkbox');
-        });
-
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#start' //指定元素
-        });
-
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#end' //指定元素
-        });
-
-
-    });
-
     /*用户-借书*/
     function allow(obj, bookID) {
         $.ajax({

@@ -126,16 +126,17 @@
                     });
                     return false;
                 } else {
-                    layer.msg(res.msg);
-                    return false;
+                    layer.confirm("<center style='color: red;font-size: 18px'>" + res.msg + "</center>",{
+                            title: '通知',
+                            btn: ['知道了'],
+                            closeBtn: 0},
+                        function(index){
+                            layer.close(index);
+                            window.location.reload();
+                        })
                 }
             },
         });
-
-        // layer.confirm("图书馆开放时间为:<center style='color: red;font-size: 18px'>周一至周日 8:00 - 22:00</center>请尽快前往图书馆归还！", {
-        //     title: '通知',
-        //     btn: ['知道了']
-        // })
     }
 
 </script>
