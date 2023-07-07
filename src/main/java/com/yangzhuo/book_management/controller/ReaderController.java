@@ -10,16 +10,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class ReaderController {
+    //balance
+    //identityId
+    //residue
     @Resource
     ReaderService readerServiceImpl;
     @Resource
     BookService bookService;
 
+    @RequestMapping("/reader/loading")
+    public String loading(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Reader user = (Reader)session.getAttribute("user");
+        System.out.println("user:="+user);
+        String id = user.getId();
+        Reader reader = readerServiceImpl.findReader(id);
+        Integer identityId = Integer.parseInt(reader.getIdentityId());
+        switch (identityId){
+            case 1: reader.setIdentityId("学生");
+            case 2: reader.setIdentityId("副教授");
+            case 3: reader.setIdentityId("讲师");
+            case 4: reader.setIdentityId("助教");
+        }
+        return reader.toString();
+    }
     @RequestMapping("/reader")
     public String toIndex(HttpSession session, Model model) {
         model.addAttribute("user", session.getAttribute("user"));
